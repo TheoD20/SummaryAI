@@ -1,10 +1,27 @@
-<div class="rounded-xl border bg-white shadow p-4">
+<div class="rounded-xl border bg-white shadow p-4" data-summary="card">
   <div class="text-xs text-slate-500 mb-2">
     <span class="uppercase tracking-wide">Method:</span> {{ method }}
     · <span>Words:</span> {{ word_count }}
     · <span>Latency:</span> {{ ms }}ms
   </div>
-  <div class="prose max-w-none">
+
+  <div class="summary-text prose max-w-none mb-3">
     <p>{{ summary }}</p>
+  </div>
+
+  <div class="flex gap-2">
+    <button type="button"
+      class="px-3 py-1.5 rounded bg-slate-800 text-white hover:bg-slate-900"
+      data-label="Copy"
+      onclick="copySummary(this)">
+      Copy
+    </button>
+
+    <button type="button"
+      class="px-3 py-1.5 rounded border border-slate-300 hover:bg-slate-50"
+      data-label="Download .txt"
+      onclick="downloadSummary(this)">
+      Download .txt
+    </button>
   </div>
 </div>

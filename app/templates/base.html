@@ -19,5 +19,48 @@
   <main class="max-w-3xl mx-auto p-6">
     {{ body|safe }}
   </main>
+  <script>
+    function flashLabel(btn, text, ms = 1200) {
+        const original = btn.getAttribute('data-label') ?? btn.textContent;
+        btn.setAttribute('data-label', original);
+        btn.textContent = text;
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.textContent = btn.getAttribute('data-label');
+            btn.disabled = false;
+        }, ms);
+    }
+
+    async function copySummary(btn){
+        try{
+            const card = btn.closest('[data-summary="card"]');
+            const text = card.querySelector('.summary-text').innerText.trim();
+            await navigator.clipboard.writeText(text);
+            flashLabel(btn, 'Copied!');
+        }catch(e){
+            console.error(e);
+            flashLabel(btn, 'Copy failed', 1500);
+        }
+    }
+
+    function downloadSummary(btn){
+        try{
+            const card = btn.closest('[data-summary="card"]');
+            const text = card.querySelector('.summary-text').innerText;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'summary.txt';
+            document.body.appendChild(a);
+            a.click(); a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url), 0);
+            flashLabel(btn, 'Saved');
+        }catch(e){
+            console.error(e);
+            flashLabel(btn, 'Download failed', 1500);
+        }
+    }
+  </script>
+
 </body>
 </html>
