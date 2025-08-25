@@ -2,15 +2,19 @@ from pathlib import Path
 from time import perf_counter
 
 from fastapi import FastAPI, Form, Request
+from threading import Thread
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-from fastapi import HTTPException
 
-from .summarizer import extractive, abstractive, count_tokens, MAX_ABS_TOKENS
+from .summarizer import extractive, abstractive, warmup_model, count_tokens, MAX_ABS_TOKENS
 
-## App and Template setup
 app = FastAPI(title="Summarizer API", version="0.1.0")
+
+# Start warmup in background so server becomes responsive quickly
+Thread(target=warmup_model, daemon=True).start()
+
+# Templates setup
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
@@ -30,7 +34,6 @@ def home(request: Request):
 def summarize_hx(request: Request, text: str = Form(...), method: str = Form("auto")):
     start = perf_counter()
     chosen = method if method != "auto" else ("extractive" if len(text.split()) < 120 else "auto")
-    print(f"Chosen method: {chosen}")
 
     try:
         if chosen == "extractive":
@@ -46,6 +49,7 @@ def summarize_hx(request: Request, text: str = Form(...), method: str = Form("au
                     chosen = "extractive"
                     summary = extractive(text)
             else:
+                chosen = "abstractive"
                 summary = abstractive(text)
     except Exception as e:
         summary = f"Error: {e}"
