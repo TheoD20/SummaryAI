@@ -1,0 +1,36 @@
+{% set body %}
+<h1 class="text-2xl font-semibold mb-4">TextSummarizerAI</h1>
+
+<form
+  class="space-y-3"
+  hx-post="/hx/summarize"
+  hx-target="#result"
+  hx-indicator="#spinner"
+>
+  <label class="block">
+    <span class="text-sm text-slate-600">Mode</span>
+    <select name="method" class="mt-1 w-full border rounded px-3 py-2">
+      <option value="auto" selected>auto</option>
+      <option value="extractive">extractive</option>
+      <option value="abstractive">abstractive</option>
+    </select>
+  </label>
+
+  <label class="block">
+    <span class="text-sm text-slate-600">Text</span>
+    <textarea name="text" rows="10" class="mt-1 w-full border rounded px-3 py-2" placeholder="Paste text to summarize..."></textarea>
+  </label>
+
+  <div class="flex items-center gap-3">
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Summarize
+    </button>
+    <span id="spinner" class="htmx-indicator text-sm text-slate-600">
+      ⏳ Summarizing… (first run might take a while)
+    </span>
+  </div>
+</form>
+
+<div id="result" class="mt-6"></div>
+{% endset %}
+{% include "base.html" %}

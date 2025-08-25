@@ -1,0 +1,10 @@
+# VS Code settings
+.vscode/
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Virtual env & local secrets
+.venv/
+.env
