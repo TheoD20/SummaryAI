@@ -37,14 +37,14 @@ Two summarization modes:
 
 **Windows (PowerShell):**
 ```powershell
-git clone <your-repo-url> TextSummarizerAI
+git clone https://github.com/TheoD20/SummaryAI.git TextSummarizerAI
 cd TextSummarizerAI
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 **MacOS/Linux:**
 ```bash
-git clone <your-repo-url> TextSummarizerAI
+git clone https://github.com/TheoD20/SummaryAI.git TextSummarizerAI
 cd TextSummarizerAI
 python3 -m venv .venv
 source .venv/bin/activate
@@ -90,8 +90,7 @@ Invoke-WebRequest http://127.0.0.1:8000/summarize `
 
 # GET /debug/backend
 Invoke-WebRequest http://127.0.0.1:8000/debug/backend | % Content
-
-´´´
+```
 ---
 
 ## License
