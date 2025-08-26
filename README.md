@@ -1,7 +1,9 @@
 # TextSummarizerAI
 
-A small AI text summarizer you can actually read and extend.
+A simple AI text summarizer you can actually read and extend.
 Mainly in python, backend is FastAPI (Uvicorn); UI is HTMX + Tailwind (CDN) + Jinja2.
+
+Provides HTMX UI for human use and JSON endpoints for programatic use.
 
 Two summarization modes:
 - Abstractive — Hugging Face Transformers (DistilBART on PyTorch CPU)
