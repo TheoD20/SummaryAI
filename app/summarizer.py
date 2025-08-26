@@ -15,13 +15,27 @@ def get_summarizer():
     return pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 
 # Handles extractive method
-def extractive(text: str, max_sent: int = 3):
-    s = re.split(r'(?<=[.!?])\s+', text.strip())
-    f = Counter(w for w in re.findall(r'\w+', text.lower()) if len(w) > 3)
-    score = lambda sent: sum(f.get(w.lower(),0) for w in re.findall(r'\w+', sent))
-    return " ".join(sorted(s, key=score, reverse=True)[:max_sent]) or text
+def extractive(text: str, max_sent: int = 3)-> str:
+    text = (text or "").strip()
+    if not text:
+        return ""
 
-# Handles abstractive method
+    sents = re.split(r'(?<=[.!?])\s+', text)
+    if len(sents) <= max_sent:
+        return text
+
+    freqs = Counter(w for w in re.findall(r'\w+', text.lower()) if len(w) > 3)
+
+    scored = []
+    for i, s in enumerate(sents):
+        score = sum(freqs.get(w.lower(), 0) for w in re.findall(r'\w+', s))
+        scored.append((score, i, s))
+
+    # pick top-N by score, then restore original order
+    top = sorted(sorted(scored, key=lambda x: x[0], reverse=True)[:max_sent], key=lambda x: x[1])
+    return " ".join(s for _, _, s in top) if top else text
+
+# Handles abstractive method with pipeline
 def abstractive(text: str, max_len=120, min_len=30):
     p = get_summarizer()
     out = p(text, max_length=max_len, min_length=min_len, do_sample=False)
